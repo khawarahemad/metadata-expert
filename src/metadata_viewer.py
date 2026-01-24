@@ -1,6 +1,6 @@
 """
 Main GUI application for Metadata Viewer.
-Modern PyQt6-based interface for viewing image metadata.
+Modern PyQt6-based interface for viewing image metadata with advanced features.
 """
 
 import sys
@@ -9,12 +9,17 @@ from PyQt6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
     QPushButton, QFileDialog, QLabel, QScrollArea, QFrame,
     QListWidget, QListWidgetItem, QTabWidget, QDialog, QLineEdit,
-    QFormLayout, QMessageBox, QDialogButtonBox
+    QFormLayout, QMessageBox, QDialogButtonBox, QComboBox, QCheckBox,
+    QSpinBox, QDoubleSpinBox, QTextEdit, QMenu
 )
-from PyQt6.QtGui import QPixmap, QIcon, QFont
+from PyQt6.QtGui import QPixmap, QIcon, QFont, QColor, QAction
 from PyQt6.QtCore import Qt, QSize, QTimer
 from metadata_parser import MetadataParser
 from metadata_editor import MetadataEditor
+from tagging_system import TaggingSystem
+from gps_handler import GPSHandler
+from privacy_handler import PrivacyHandler
+from image_operations import ImageOperations
 
 
 class EditMetadataDialog(QDialog):
@@ -205,13 +210,62 @@ class MetadataViewer(QMainWindow):
         self.current_directory = Path.home()
         self.image_list = []
         self.current_index = 0
+        self.dark_mode = False
+        self.tagging_system = TaggingSystem()
         
         self.init_ui()
-        self.setWindowTitle('Metadata Viewer')
-        self.setGeometry(100, 100, 1400, 900)
+        self.setWindowTitle('🖼️ Metadata Expert - Professional Image Metadata Manager')
+        self.setGeometry(100, 100, 1600, 900)
         self.setWindowIcon(self.create_icon())
+        
+        # Setup keyboard shortcuts
+        self.setup_keyboard_shortcuts()
 
-    def init_ui(self):
+    def setup_keyboard_shortcuts(self):
+        """Setup keyboard shortcuts."""
+        self.open_shortcut = QAction("Open", self)
+        self.open_shortcut.setShortcut("Ctrl+O")
+        self.open_shortcut.triggered.connect(self.open_image)
+        self.addAction(self.open_shortcut)
+        
+        self.edit_shortcut = QAction("Edit", self)
+        self.edit_shortcut.setShortcut("Ctrl+E")
+        self.edit_shortcut.triggered.connect(self.edit_metadata)
+        self.addAction(self.edit_shortcut)
+        
+        self.export_shortcut = QAction("Export", self)
+        self.export_shortcut.setShortcut("Ctrl+S")
+        self.export_shortcut.triggered.connect(self.export_image)
+        self.addAction(self.export_shortcut)
+        
+        self.dark_mode_shortcut = QAction("Dark Mode", self)
+        self.dark_mode_shortcut.setShortcut("Ctrl+D")
+        self.dark_mode_shortcut.triggered.connect(self.toggle_dark_mode)
+        self.addAction(self.dark_mode_shortcut)
+
+    def toggle_dark_mode(self):
+        """Toggle dark/light mode."""
+        self.dark_mode = not self.dark_mode
+        
+        if self.dark_mode:
+            self.setStyleSheet(self.get_dark_stylesheet())
+            QMessageBox.information(self, "Dark Mode", "Dark mode enabled")
+        else:
+            self.setStyleSheet("")
+            QMessageBox.information(self, "Light Mode", "Light mode enabled")
+    
+    def get_dark_stylesheet(self) -> str:
+        """Get dark mode stylesheet."""
+        return """
+            QMainWindow, QDialog { background-color: #1e1e1e; color: #ffffff; }
+            QWidget { background-color: #2d2d2d; color: #ffffff; }
+            QLineEdit, QTextEdit { background-color: #3d3d3d; color: #ffffff; border: 1px solid #555; }
+            QPushButton { background-color: #0066cc; color: #ffffff; border: none; padding: 5px; border-radius: 3px; }
+            QPushButton:hover { background-color: #0052a3; }
+            QListWidget, QTabWidget { background-color: #2d2d2d; color: #ffffff; }
+            QTabBar::tab { background-color: #3d3d3d; color: #ffffff; }
+            QTabBar::tab:selected { background-color: #0066cc; }
+        """
         """Initialize the user interface."""
         # Create central widget
         central_widget = QWidget()
@@ -233,27 +287,45 @@ class MetadataViewer(QMainWindow):
         open_button = QPushButton('📁 Open Image')
         open_button.clicked.connect(self.open_image)
         open_button.setMinimumHeight(35)
-        open_button.setFont(QFont('System', 11))
+        open_button.setFont(QFont('System', 10))
         
         browse_button = QPushButton('📂 Browse Folder')
         browse_button.clicked.connect(self.browse_folder)
         browse_button.setMinimumHeight(35)
-        browse_button.setFont(QFont('System', 11))
+        browse_button.setFont(QFont('System', 10))
         
         edit_button = QPushButton('✏️ Edit Metadata')
         edit_button.clicked.connect(self.edit_metadata)
         edit_button.setMinimumHeight(35)
-        edit_button.setFont(QFont('System', 11))
+        edit_button.setFont(QFont('System', 10))
         
         export_button = QPushButton('💾 Export/Save')
         export_button.clicked.connect(self.export_image)
         export_button.setMinimumHeight(35)
-        export_button.setFont(QFont('System', 11))
+        export_button.setFont(QFont('System', 10))
         
         button_layout.addWidget(open_button)
         button_layout.addWidget(browse_button)
         button_layout.addWidget(edit_button)
         button_layout.addWidget(export_button)
+        
+        # Advanced menu button
+        advanced_menu = QPushButton('⚙️ Advanced')
+        advanced_menu.setMinimumHeight(35)
+        advanced_menu.setFont(QFont('System', 10))
+        
+        # Create menu
+        menu = QMenu(self)
+        menu.addAction('🗺️ GPS Info', self.show_gps_info)
+        menu.addAction('🔐 Privacy Report', self.show_privacy_report)
+        menu.addAction('🛡️ Privacy Mode', self.enable_privacy_mode)
+        menu.addAction('📷 Image Operations', self.show_image_operations)
+        menu.addSeparator()
+        menu.addAction('🌓 Dark Mode (Ctrl+D)', self.toggle_dark_mode)
+        
+        advanced_menu.setMenu(menu)
+        button_layout.addWidget(advanced_menu)
+        
         left_layout.addLayout(button_layout)
         
         # File list
@@ -533,6 +605,236 @@ class MetadataViewer(QMainWindow):
             else:
                 QMessageBox.critical(self, 'Error', 'Failed to remove metadata')
             parent_dialog.close()
+
+    def show_gps_info(self):
+        """Show GPS information for current image."""
+        if not self.current_file:
+            QMessageBox.warning(self, 'Warning', 'Please select an image first')
+            return
+        
+        gps_info = GPSHandler.get_gps_info(self.current_file)
+        
+        message = "📍 GPS Information:\n\n"
+        if gps_info['has_gps']:
+            lat, lon = gps_info['coordinates']
+            message += f"Latitude: {lat:.6f}°\n"
+            message += f"Longitude: {lon:.6f}°\n"
+            message += f"Location: {gps_info['location_name']}\n"
+            if gps_info['altitude']:
+                message += f"Altitude: {gps_info['altitude']:.2f}m"
+        else:
+            message += "No GPS data found in this image"
+        
+        QMessageBox.information(self, 'GPS Information', message)
+    
+    def show_privacy_report(self):
+        """Show privacy report for current image."""
+        if not self.current_file:
+            QMessageBox.warning(self, 'Warning', 'Please select an image first')
+            return
+        
+        report = PrivacyHandler.get_privacy_report(self.current_file)
+        
+        message = f"🔐 Privacy Report for {report['file']}:\n\n"
+        message += f"Risk Level: {report['risk_level']}\n\n"
+        message += f"Has GPS Data: {'Yes' if report['has_gps'] else 'No'}\n"
+        message += f"Has Timestamps: {'Yes' if report['has_timestamp'] else 'No'}\n"
+        message += f"Has Camera Info: {'Yes' if report['has_camera_info'] else 'No'}\n"
+        message += f"Has Personal Info: {'Yes' if report['has_personal_info'] else 'No'}\n"
+        message += f"\nSensitive Fields Found: {report['sensitive_fields_found']}"
+        
+        QMessageBox.information(self, 'Privacy Report', message)
+    
+    def enable_privacy_mode(self):
+        """Enable privacy mode to remove sensitive data."""
+        if not self.current_file:
+            QMessageBox.warning(self, 'Warning', 'Please select an image first')
+            return
+        
+        # Create backup
+        backup_path = MetadataEditor.create_backup(self.current_file)
+        if not backup_path:
+            QMessageBox.critical(self, 'Error', 'Failed to create backup')
+            return
+        
+        if PrivacyHandler.privacy_mode(self.current_file):
+            QMessageBox.information(
+                self,
+                'Success',
+                'Privacy mode enabled! Sensitive data removed.\nBackup saved as: ' + backup_path.name
+            )
+            self.load_image(self.current_file)
+        else:
+            QMessageBox.critical(self, 'Error', 'Failed to enable privacy mode')
+            PrivacyHandler.remove_gps_data(self.current_file)
+    
+    def show_image_operations(self):
+        """Show image operations dialog."""
+        if not self.current_file:
+            QMessageBox.warning(self, 'Warning', 'Please select an image first')
+            return
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle('📷 Image Operations')
+        dialog.setGeometry(300, 300, 400, 300)
+        
+        layout = QVBoxLayout(dialog)
+        
+        # Resize button
+        resize_button = QPushButton('🔍 Resize Image')
+        resize_button.clicked.connect(lambda: self.resize_image_dialog())
+        layout.addWidget(resize_button)
+        
+        # Compress button
+        compress_button = QPushButton('🗜️ Compress Image')
+        compress_button.clicked.connect(lambda: self.compress_image_dialog())
+        layout.addWidget(compress_button)
+        
+        # Convert format button
+        convert_button = QPushButton('🔄 Convert Format')
+        convert_button.clicked.connect(lambda: self.convert_format_dialog())
+        layout.addWidget(convert_button)
+        
+        # Show image info
+        info_button = QPushButton('ℹ️ Image Information')
+        info_button.clicked.connect(lambda: self.show_image_info())
+        layout.addWidget(info_button)
+        
+        # Close button
+        close_button = QPushButton('Close')
+        close_button.clicked.connect(dialog.close)
+        layout.addWidget(close_button)
+        
+        dialog.exec()
+    
+    def resize_image_dialog(self):
+        """Show resize image dialog."""
+        dialog = QDialog(self)
+        dialog.setWindowTitle('Resize Image')
+        dialog.setGeometry(400, 400, 300, 200)
+        
+        layout = QFormLayout(dialog)
+        
+        width_input = QSpinBox()
+        width_input.setRange(1, 10000)
+        width_input.setValue(800)
+        layout.addRow('Width (px):', width_input)
+        
+        height_input = QSpinBox()
+        height_input.setRange(1, 10000)
+        height_input.setValue(600)
+        layout.addRow('Height (px):', height_input)
+        
+        maintain_aspect = QCheckBox('Maintain Aspect Ratio')
+        maintain_aspect.setChecked(True)
+        layout.addRow(maintain_aspect)
+        
+        button_layout = QHBoxLayout()
+        resize_button = QPushButton('Resize')
+        cancel_button = QPushButton('Cancel')
+        
+        def do_resize():
+            output_path = self.current_file.parent / f"resized_{self.current_file.name}"
+            if ImageOperations.resize_image(self.current_file, width_input.value(), 
+                                           height_input.value(), maintain_aspect.isChecked(), output_path):
+                QMessageBox.information(self, 'Success', f'Image resized!\nSaved as: resized_{self.current_file.name}')
+                dialog.close()
+            else:
+                QMessageBox.critical(self, 'Error', 'Failed to resize image')
+        
+        resize_button.clicked.connect(do_resize)
+        cancel_button.clicked.connect(dialog.close)
+        
+        button_layout.addWidget(resize_button)
+        button_layout.addWidget(cancel_button)
+        layout.addRow(button_layout)
+        
+        dialog.exec()
+    
+    def compress_image_dialog(self):
+        """Show compress image dialog."""
+        dialog = QDialog(self)
+        dialog.setWindowTitle('Compress Image')
+        dialog.setGeometry(400, 400, 300, 150)
+        
+        layout = QFormLayout(dialog)
+        
+        quality_input = QSpinBox()
+        quality_input.setRange(1, 100)
+        quality_input.setValue(85)
+        layout.addRow('Quality (1-100):', quality_input)
+        
+        button_layout = QHBoxLayout()
+        compress_button = QPushButton('Compress')
+        cancel_button = QPushButton('Cancel')
+        
+        def do_compress():
+            output_path = self.current_file.parent / f"compressed_{self.current_file.name}"
+            if ImageOperations.compress_image(self.current_file, quality_input.value(), output_path):
+                QMessageBox.information(self, 'Success', f'Image compressed!\nSaved as: compressed_{self.current_file.name}')
+                dialog.close()
+            else:
+                QMessageBox.critical(self, 'Error', 'Failed to compress image')
+        
+        compress_button.clicked.connect(do_compress)
+        cancel_button.clicked.connect(dialog.close)
+        
+        button_layout.addWidget(compress_button)
+        button_layout.addWidget(cancel_button)
+        layout.addRow(button_layout)
+        
+        dialog.exec()
+    
+    def convert_format_dialog(self):
+        """Show format conversion dialog."""
+        dialog = QDialog(self)
+        dialog.setWindowTitle('Convert Format')
+        dialog.setGeometry(400, 400, 300, 150)
+        
+        layout = QFormLayout(dialog)
+        
+        format_combo = QComboBox()
+        format_combo.addItems(['jpg', 'png', 'webp', 'bmp', 'gif'])
+        layout.addRow('Target Format:', format_combo)
+        
+        button_layout = QHBoxLayout()
+        convert_button = QPushButton('Convert')
+        cancel_button = QPushButton('Cancel')
+        
+        def do_convert():
+            output_path = self.current_file.parent / f"{self.current_file.stem}.{format_combo.currentText()}"
+            if ImageOperations.convert_format(self.current_file, format_combo.currentText(), output_path):
+                QMessageBox.information(self, 'Success', f'Image converted!\nSaved as: {output_path.name}')
+                dialog.close()
+            else:
+                QMessageBox.critical(self, 'Error', 'Failed to convert image')
+        
+        convert_button.clicked.connect(do_convert)
+        cancel_button.clicked.connect(dialog.close)
+        
+        button_layout.addWidget(convert_button)
+        button_layout.addWidget(cancel_button)
+        layout.addRow(button_layout)
+        
+        dialog.exec()
+    
+    def show_image_info(self):
+        """Show comprehensive image information."""
+        if not self.current_file:
+            return
+        
+        info = ImageOperations.get_image_info(self.current_file)
+        
+        message = "📊 Image Information:\n\n"
+        message += f"Format: {info.get('format', 'Unknown')}\n"
+        message += f"Dimensions: {info.get('width', 0)}x{info.get('height', 0)} px\n"
+        message += f"Size: {info.get('size_mb', 0):.2f} MB\n"
+        message += f"Color Mode: {info.get('mode', 'Unknown')}\n"
+        message += f"DPI: {info.get('dpi', (72, 72))}\n"
+        if info.get('has_animation'):
+            message += f"Animation Frames: {info.get('frame_count', 1)}"
+        
+        QMessageBox.information(self, 'Image Information', message)
 
     @staticmethod
     def create_icon():
