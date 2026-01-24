@@ -230,7 +230,39 @@ python -m py_compile src/*.py
 python main.py
 ```
 
-## 🎯 Use Cases
+## 📦 Advanced Modules
+
+The application includes several specialized modules for advanced operations:
+
+### 🏷️ Tagging System (`src/tagging_system.py`)
+- Custom metadata tagging with hierarchical organization
+- Tag persistence in JSON database (~/.metadata_expert/tags.json)
+- Autocomplete suggestions based on frequency
+- Tag cloud visualization with statistics
+- Batch tagging and tag-based image search
+
+### 🗺️ GPS & Location Handler (`src/gps_handler.py`)
+- GPS coordinate extraction and editing in EXIF data
+- Reverse geocoding with location database
+- Altitude extraction and manipulation
+- Location-based image grouping by proximity
+- Map URL generation for viewing coordinates
+
+### 🔐 Privacy & Security Handler (`src/privacy_handler.py`)
+- Category-based metadata removal (GPS, timestamps, camera info, personal data)
+- Privacy risk assessment with detailed reporting
+- Selective metadata removal without full stripping
+- Secure file deletion with multi-pass overwriting
+- Batch privacy mode for folder operations
+
+### 📱 Image Operations (`src/image_operations.py`)
+- Resize images with aspect ratio preservation
+- Compress images with quality control (1-100)
+- Format conversion between 10+ supported formats
+- Batch processing for resize, compress, and convert operations
+- Thumbnail generation and image property analysis
+
+### 🎯 Use Cases
 
 ✅ **Photographers & Content Creators**
 - Review and manage photo metadata
@@ -284,13 +316,15 @@ For issues, questions, or suggestions:
 
 ## 🎨 Technology Stack
 
-| Component | Technology |
-|-----------|-----------|
-| GUI Framework | PyQt6 |
-| Image Processing | Pillow |
-| EXIF Handling | piexif |
-| Language | Python 3.8+ |
-| Platform | Cross-platform (Mac, Windows, Linux) |
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| GUI Framework | PyQt6 6.6.1 | Cross-platform interface |
+| Image Processing | Pillow 10.1.0 | Format handling & operations |
+| EXIF Handling | piexif 1.1.3 | Metadata read/write |
+| Mapping | folium 0.14.0 | Interactive map visualization |
+| Geocoding | geopy 2.3.0 | Reverse geocoding support |
+| Language | Python 3.8+ | Core language |
+| Platform | Cross-platform | Mac, Windows, Linux |
 
 ## 📚 Additional Resources
 
