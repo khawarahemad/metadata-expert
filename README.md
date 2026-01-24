@@ -49,12 +49,14 @@
 ### **🗺️ GPS & Location Features**
 - Extract GPS coordinates from images
 - Visual location display with coordinates
-- Reverse geocoding (coordinates to location names)
+- **Reverse geocoding** with 50+ Indian cities & states support
+- Worldwide location database (USA, UK, France, Japan, Australia, etc.)
 - Edit GPS coordinates directly
 - Remove GPS data for privacy
 - Group images by location
 - Interactive map URL generation
 - GPS altitude extraction and editing
+- Automatic location detection for Indian cities and states
 
 ### **🔐 Security & Privacy Features**
 - Privacy mode to remove sensitive metadata
@@ -243,10 +245,14 @@ The application includes several specialized modules for advanced operations:
 
 ### 🗺️ GPS & Location Handler (`src/gps_handler.py`)
 - GPS coordinate extraction and editing in EXIF data
-- Reverse geocoding with location database
+- **Reverse geocoding** with intelligent matching:
+  - 50+ Indian cities covering all states
+  - Major international cities worldwide
+  - Automatic proximity detection (8° radius)
 - Altitude extraction and manipulation
 - Location-based image grouping by proximity
 - Map URL generation for viewing coordinates
+- DMS to decimal degree conversion
 
 ### 🔐 Privacy & Security Handler (`src/privacy_handler.py`)
 - Category-based metadata removal (GPS, timestamps, camera info, personal data)
@@ -261,6 +267,15 @@ The application includes several specialized modules for advanced operations:
 - Format conversion between 10+ supported formats
 - Batch processing for resize, compress, and convert operations
 - Thumbnail generation and image property analysis
+
+### 🖼️ Metadata Parser (`src/metadata_parser.py`)
+- **MakerNote human-readable parsing**:
+  - Detects camera manufacturers (Apple, Canon, Nikon, Sony, Panasonic, Fujifilm, Olympus)
+  - Extracts and displays manufacturer information
+  - Converts binary MakerNote data to readable format
+- Comprehensive EXIF extraction
+- File properties and image information
+- Auto-detection of all image formats
 
 ### 🎯 Use Cases
 
@@ -321,6 +336,8 @@ For issues, questions, or suggestions:
 | GUI Framework | PyQt6 6.6.1 | Cross-platform interface |
 | Image Processing | Pillow 10.1.0 | Format handling & operations |
 | EXIF Handling | piexif 1.1.3 | Metadata read/write |
+| MakerNote Parsing | Custom Parser | Camera manufacturer detection |
+| Location Database | LOCATION_DB | 50+ Indian cities & international locations |
 | Mapping | folium 0.14.0 | Interactive map visualization |
 | Geocoding | geopy 2.3.0 | Reverse geocoding support |
 | Language | Python 3.8+ | Core language |
@@ -332,6 +349,30 @@ For issues, questions, or suggestions:
 - [Pillow Documentation](https://python-pillow.org/)
 - [PyQt6 Documentation](https://www.riverbankcomputing.com/static/Docs/PyQt6/)
 - [piexif Documentation](https://piexif.readthedocs.io/)
+- [MakerNote Formats](https://www.exiftool.org/)
+
+## 🗺️ Location Database Coverage
+
+### India
+- **All Major States**: Covered with state capital coordinates
+- **Key Cities**: New Delhi, Mumbai, Chennai, Kolkata, Bangalore, Hyderabad, Pune, Indore, and 40+ more
+- **Smart Matching**: Auto-detects nearest city within ~8° radius
+- Examples: Delhi, Rajasthan, Tamil Nadu, Maharashtra, Karnataka, Gujarat, Kerala, etc.
+
+### International
+- USA: New York, Los Angeles, Chicago, San Francisco, Denver, Seattle
+- Europe: London, Paris, Moscow
+- Asia: Tokyo, Hong Kong, Singapore
+- Australia: Sydney
+
+## 🎯 What's New
+
+### Latest Updates (v2.0)
+- ✅ **MakerNote Human-Readable Parsing**: Automatically detects camera manufacturers (Apple, Canon, Nikon, Sony, Panasonic, Fujifilm, Olympus)
+- ✅ **Expanded Location Database**: 60+ global locations with focus on Indian cities and states
+- ✅ **Smart Geocoding**: Improved proximity matching for better location detection
+- ✅ **Complete License**: MIT License included for legal clarity
+- ✅ **Documentation**: Comprehensive README with all features and usage guide
 
 ## 🙏 Acknowledgments
 
@@ -339,6 +380,7 @@ Built with:
 - PyQt6 for the modern UI
 - Pillow for image processing
 - piexif for EXIF handling
+- Community contributions and feedback
 
 ---
 
