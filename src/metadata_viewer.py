@@ -266,6 +266,8 @@ class MetadataViewer(QMainWindow):
             QTabBar::tab { background-color: #3d3d3d; color: #ffffff; }
             QTabBar::tab:selected { background-color: #0066cc; }
         """
+
+    def init_ui(self):
         """Initialize the user interface."""
         # Create central widget
         central_widget = QWidget()

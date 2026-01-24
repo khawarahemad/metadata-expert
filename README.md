@@ -28,12 +28,59 @@
 - Auto-backup before any modifications
 - Undo support with automatic backups
 
-### 🎨 **Modern Professional UI**
+### **🎨 Modern Professional UI**
 - Clean, intuitive PyQt6-based interface
-- Dark/light theme support
+- 🌓 **Dark Mode** toggle (Ctrl+D) for comfortable viewing
+- Keyboard shortcuts for quick access (Ctrl+O, Ctrl+E, Ctrl+S)
 - Split-panel layout with live preview
 - Organized metadata in tabbed interface
 - Smart categorization of 40+ metadata fields
+- Responsive drag-and-drop support
+
+### **🏷️ Advanced Tagging System**
+- Create custom tags for images
+- Hierarchical tag organization with categories
+- Tag autocomplete from history
+- Tag cloud visualization with frequency analysis
+- Find images by tags instantly
+- Tag statistics and analytics
+- Export/import tags in JSON format
+
+### **🗺️ GPS & Location Features**
+- Extract GPS coordinates from images
+- Visual location display with coordinates
+- Reverse geocoding (coordinates to location names)
+- Edit GPS coordinates directly
+- Remove GPS data for privacy
+- Group images by location
+- Interactive map URL generation
+- GPS altitude extraction and editing
+
+### **🔐 Security & Privacy Features**
+- Privacy mode to remove sensitive metadata
+- Selective field removal (GPS, timestamps, camera info, personal data)
+- Privacy risk reporting
+- Metadata encryption support
+- Secure file deletion with overwrite
+- Batch privacy mode for multiple images
+- Sensitive metadata scanning and reporting
+
+### **📱 Advanced Image Operations**
+- Batch resize images with aspect ratio control
+- Image compression with quality control
+- Format conversion (JPG, PNG, WebP, BMP, GIF, TIFF)
+- Batch processing for folders
+- Create thumbnails automatically
+- Get comprehensive image information
+- File size optimization reports
+
+### **🔧 Additional Features**
+- **Keyboard Shortcuts**: Ctrl+O (Open), Ctrl+E (Edit), Ctrl+S (Export), Ctrl+D (Dark Mode)
+- **Advanced Menu**: Access all tools from ⚙️ Advanced button
+- **Privacy Report**: Detailed security analysis of image metadata
+- **Image Info**: Complete technical specifications
+- **GPS Integration**: View and edit location data
+- **Responsive Design**: Works smoothly on all screen sizes
 
 ### 🔍 **Smart File Management**
 - Browse and manage folders of images
@@ -138,40 +185,12 @@ metadata-expert/
 └── src/
     ├── metadata_viewer.py       # Main GUI application & dialogs
     ├── metadata_parser.py       # Metadata extraction logic
-    └── metadata_editor.py       # Metadata editing & export
+    ├── metadata_editor.py       # Metadata editing & export
+    ├── tagging_system.py        # Custom tagging & organization
+    ├── gps_handler.py           # GPS & location management
+    ├── privacy_handler.py       # Privacy & security features
+    └── image_operations.py      # Image processing operations
 ```
-
-### Module Documentation
-
-#### `metadata_parser.py`
-Extracts metadata from image files using Pillow and piexif libraries.
-
-**Key Classes**:
-- `MetadataParser` - Static methods for extracting EXIF, basic info, and properties
-
-**Key Methods**:
-- `get_all_metadata(file_path)` - Get complete metadata dictionary
-- `get_exif_data(file_path)` - Extract EXIF data specifically
-- `find_images_in_directory(directory)` - Scan directory for images
-
-#### `metadata_editor.py`
-Handles editing and exporting of image metadata.
-
-**Key Classes**:
-- `MetadataEditor` - Static methods for metadata operations
-
-**Key Methods**:
-- `edit_exif_data(file_path, exif_updates)` - Modify EXIF data
-- `export_metadata_to_file(file_path, metadata, export_path)` - Save metadata
-- `remove_exif_data(file_path, export_path)` - Strip metadata
-- `create_backup(file_path)` - Auto-backup functionality
-
-#### `metadata_viewer.py`
-PyQt6-based GUI application.
-
-**Key Classes**:
-- `MetadataViewer` - Main application window
-- `EditMetadataDialog` - Edit dialog with dynamic field discovery
 ## 📋 Requirements
 
 - Python 3.8+
