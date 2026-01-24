@@ -1,68 +1,295 @@
-# Metadata Viewer
+# 📸 Metadata Expert - Professional Image Metadata Viewer & Editor
 
-A modern, cross-platform Python GUI application for viewing image metadata. Supports all common image formats and displays comprehensive EXIF data, file information, and image properties.
+> A powerful, modern cross-platform Python GUI application for viewing, editing, and managing image metadata with an intuitive interface supporting Mac and Windows.
 
-## Features
+[![GitHub](https://img.shields.io/badge/GitHub-metadata--expert-blue?logo=github)](https://github.com/khawarahemad/metadata-expert)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green)]()
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-lightgrey)]()
 
-- 🖼️ **Supports All Image Formats**: JPG, PNG, GIF, BMP, TIFF, WebP, and more
-- 📊 **Complete Metadata Display**: View EXIF data, file information, and image properties
-- 🎨 **Modern UI**: Clean, professional interface with image preview
-- 🖥️ **Cross-Platform**: Works seamlessly on macOS and Windows
-- 🔍 **Auto-Detection**: Automatically detects image files in selected directories
-- 💾 **File Browser**: Built-in file explorer for easy navigation
+## ✨ Features
 
-## Installation
+### 🖼️ **Universal Image Format Support**
+- JPG, JPEG, PNG, GIF, BMP, TIFF, WebP, ICO, and more
+- Automatic format detection and smart handling
+- Works with any standard image file format
 
-1. Clone or download this repository
-2. Create a virtual environment (recommended):
+### 📊 **Complete Metadata Management**
+- **View**: EXIF data, file properties, image dimensions, color profiles
+- **Edit**: 40+ editable metadata fields with original value display
+- **Export**: Save metadata to text files or create copies
+- **Clean**: Remove all metadata for privacy protection
+
+### ✏️ **Advanced Editing Capabilities**
+- Edit camera information (make, model, lens)
+- Modify date/time stamps and EXIF data
+- Update creator info (artist, copyright, description)
+- Adjust exposure settings, GPS coordinates, and more
+- Auto-backup before any modifications
+- Undo support with automatic backups
+
+### 🎨 **Modern Professional UI**
+- Clean, intuitive PyQt6-based interface
+- Dark/light theme support
+- Split-panel layout with live preview
+- Organized metadata in tabbed interface
+- Smart categorization of 40+ metadata fields
+
+### 🔍 **Smart File Management**
+- Browse and manage folders of images
+- Quick file navigator
+- Auto-detect all images in directories
+- Batch processing ready
+- Responsive and fast performance
+
+### 💾 **Export & Privacy Options**
+- Export images to any location
+- Save metadata as text files
+- Remove EXIF data (privacy mode)
+- Create backups automatically
+- Restore from backup if needed
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.8 or higher
+- pip (Python package manager)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/khawarahemad/metadata-expert.git
+   cd metadata-expert
+   ```
+
+2. **Create a virtual environment** (recommended)
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Install dependencies:
+3. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-## Usage
+### Running the Application
 
-Run the application:
 ```bash
-python src/main.py
+python main.py
 ```
 
-### How to Use
-
-1. **Open an Image**: Click the "Open Image" button or drag-and-drop an image file
-2. **Browse Directory**: Use the file browser to navigate and view multiple images
-3. **View Metadata**: All metadata is displayed in the right panel including:
-   - EXIF data (camera info, GPS, timestamps, etc.)
-   - File properties (size, format, dimensions)
-   - Color profile information
-   - Image dimensions and DPI
-
-## Project Structure
-
-```
-metadata-edit/
-├── src/
-│   ├── main.py              # Main application entry point
-│   ├── metadata_viewer.py   # Main GUI window and logic
-│   └── metadata_parser.py   # Metadata extraction utilities
-├── requirements.txt         # Python dependencies
-├── README.md               # This file
-└── .vscode/
-    └── settings.json       # VS Code settings
+Or directly:
+```bash
+./main.py
 ```
 
-## Requirements
+## 📖 Usage Guide
 
-- Python 3.8 or higher
+### Main Interface
+1. **📁 Open Image** - Select a single image file to view
+2. **📂 Browse Folder** - Load all images from a directory
+3. **✏️ Edit Metadata** - Open editor dialog to modify metadata
+4. **💾 Export/Save** - Save images and metadata in various formats
+
+### Viewing Metadata
+- **Basic Info Tab**: File properties, dimensions, format, size
+- **EXIF Data Tab**: Camera settings, timestamps, GPS coordinates
+- **Properties Tab**: Color space, transparency, animation info
+
+### Editing Metadata
+
+The edit dialog displays metadata organized by category:
+- 📅 Date & Time
+- 👤 Creator Info
+- 📷 Camera Info
+- 🎯 Exposure Settings
+- 🔍 Focus & Flash
+- 🎨 Image Properties
+- 🌍 Location (GPS)
+- 📝 Additional Info
+
+**Features**:
+- See original values in gray text
+- Edit directly in input fields
+- Auto-backup before saving
+- Clear empty fields option
+- Real-time validation
+
+### Export Options
+
+1. **Copy Image** - Save image to new location
+2. **Export Metadata** - Save all metadata to `.txt` file
+3. **Remove Metadata** - Export image without EXIF data
+
+## 📁 Project Structure
+
+```
+metadata-expert/
+├── main.py                      # Entry point
+├── requirements.txt             # Python dependencies
+├── README.md                    # This file
+├── .github/
+│   └── copilot-instructions.md # Development notes
+├── .vscode/
+│   ├── settings.json           # VS Code settings
+│   └── tasks.json              # Build tasks
+└── src/
+    ├── metadata_viewer.py       # Main GUI application & dialogs
+    ├── metadata_parser.py       # Metadata extraction logic
+    └── metadata_editor.py       # Metadata editing & export
+```
+
+### Module Documentation
+
+#### `metadata_parser.py`
+Extracts metadata from image files using Pillow and piexif libraries.
+
+**Key Classes**:
+- `MetadataParser` - Static methods for extracting EXIF, basic info, and properties
+
+**Key Methods**:
+- `get_all_metadata(file_path)` - Get complete metadata dictionary
+- `get_exif_data(file_path)` - Extract EXIF data specifically
+- `find_images_in_directory(directory)` - Scan directory for images
+
+#### `metadata_editor.py`
+Handles editing and exporting of image metadata.
+
+**Key Classes**:
+- `MetadataEditor` - Static methods for metadata operations
+
+**Key Methods**:
+- `edit_exif_data(file_path, exif_updates)` - Modify EXIF data
+- `export_metadata_to_file(file_path, metadata, export_path)` - Save metadata
+- `remove_exif_data(file_path, export_path)` - Strip metadata
+- `create_backup(file_path)` - Auto-backup functionality
+
+#### `metadata_viewer.py`
+PyQt6-based GUI application.
+
+**Key Classes**:
+- `MetadataViewer` - Main application window
+- `EditMetadataDialog` - Edit dialog with dynamic field discovery
+## 📋 Requirements
+
+- Python 3.8+
 - PyQt6 (GUI framework)
 - Pillow (Image processing)
-- piexif (EXIF data parsing)
+- piexif (EXIF data handling)
 
-## License
+See [requirements.txt](requirements.txt) for exact versions.
 
-MIT License - Feel free to use and modify as needed.
+## 🛠️ Development
+
+### Setting Up Development Environment
+
+```bash
+# Clone and enter directory
+git clone https://github.com/khawarahemad/metadata-expert.git
+cd metadata-expert
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python main.py
+```
+
+### Running Tests
+
+```bash
+# Syntax check
+python -m py_compile src/*.py
+
+# Run the application
+python main.py
+```
+
+## 🎯 Use Cases
+
+✅ **Photographers & Content Creators**
+- Review and manage photo metadata
+- Add copyright and creator information
+- Prepare images for publication
+- Batch metadata management
+
+✅ **Privacy-Conscious Users**
+- Remove location data from photos
+- Strip sensitive metadata before sharing
+- Verify image privacy settings
+
+✅ **Archivists & Librarians**
+- Document image information
+- Export metadata for cataloging
+- Manage image collections
+
+✅ **Developers**
+- Inspect image metadata programmatically
+- Test EXIF handling
+- Batch process images
+
+## 🐛 Known Limitations
+
+- Some image formats may have limited EXIF support
+- Batch editing requires manual file selection
+- GPS data editing requires proper EXIF format
+
+## 🔐 Privacy & Security
+
+- No data is sent to external servers
+- All processing is local
+- Automatic backups before editing
+- Optional metadata removal for privacy
+
+## 📝 License
+
+MIT License - Feel free to use, modify, and distribute.
+
+See [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit issues and pull requests.
+
+## 📧 Contact & Support
+
+For issues, questions, or suggestions:
+- Open an issue on [GitHub](https://github.com/khawarahemad/metadata-expert/issues)
+- Check existing issues for solutions
+
+## 🎨 Technology Stack
+
+| Component | Technology |
+|-----------|-----------|
+| GUI Framework | PyQt6 |
+| Image Processing | Pillow |
+| EXIF Handling | piexif |
+| Language | Python 3.8+ |
+| Platform | Cross-platform (Mac, Windows, Linux) |
+
+## 📚 Additional Resources
+
+- [EXIF Format Reference](https://en.wikipedia.org/wiki/Exif)
+- [Pillow Documentation](https://python-pillow.org/)
+- [PyQt6 Documentation](https://www.riverbankcomputing.com/static/Docs/PyQt6/)
+- [piexif Documentation](https://piexif.readthedocs.io/)
+
+## 🙏 Acknowledgments
+
+Built with:
+- PyQt6 for the modern UI
+- Pillow for image processing
+- piexif for EXIF handling
+
+---
+
+**Made with ❤️ for image enthusiasts everywhere**
+
+⭐ If you find this tool useful, please consider giving it a star on GitHub!
+
