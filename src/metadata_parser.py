@@ -9,6 +9,7 @@ from PIL.ExifTags import TAGS
 import piexif
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
+import struct
 
 
 class MetadataParser:
@@ -52,6 +53,60 @@ class MetadataParser:
             return {'Error': str(e)}
 
     @staticmethod
+    def parse_makernote(makernote_data) -> Dict:
+        """Parse and make MakerNote data human-readable."""
+        if not makernote_data:
+            return {}
+        
+        makernote_info = {}
+        
+        try:
+            # Convert to bytes if needed
+            if not isinstance(makernote_data, bytes):
+                makernote_str = str(makernote_data)
+                makernote_data = makernote_str.encode() if isinstance(makernote_str, str) else makernote_data
+            
+            # Detect camera maker from MakerNote signature
+            if makernote_data.startswith(b'Apple'):
+                makernote_info['Camera Maker'] = 'Apple iPhone'
+                makernote_info['Type'] = 'Apple MakerNote'
+            elif makernote_data.startswith(b'Canon'):
+                makernote_info['Camera Maker'] = 'Canon'
+                makernote_info['Type'] = 'Canon MakerNote (Binary Format)'
+            elif makernote_data.startswith(b'Nikon'):
+                makernote_info['Camera Maker'] = 'Nikon'
+                makernote_info['Type'] = 'Nikon MakerNote (Binary Format)'
+            elif makernote_data.startswith(b'SONY'):
+                makernote_info['Camera Maker'] = 'Sony'
+                makernote_info['Type'] = 'Sony MakerNote (Binary Format)'
+            elif makernote_data.startswith(b'Panasonic'):
+                makernote_info['Camera Maker'] = 'Panasonic'
+                makernote_info['Type'] = 'Panasonic MakerNote (Binary Format)'
+            elif makernote_data.startswith(b'FUJIFILM'):
+                makernote_info['Camera Maker'] = 'Fujifilm'
+                makernote_info['Type'] = 'Fujifilm MakerNote (Binary Format)'
+            elif makernote_data.startswith(b'Olympus'):
+                makernote_info['Camera Maker'] = 'Olympus'
+                makernote_info['Type'] = 'Olympus MakerNote (Binary Format)'
+            else:
+                # Try to extract readable text
+                makernote_info['Camera Maker'] = 'Unknown/Proprietary'
+                try:
+                    text = makernote_data.decode('utf-8', errors='ignore')
+                    readable_chars = ''.join(c for c in text if 32 <= ord(c) <= 126 or c in '\n\t')
+                    if readable_chars:
+                        makernote_info['Readable Data'] = readable_chars[:150]
+                    else:
+                        makernote_info['Type'] = f'Binary MakerNote ({len(makernote_data)} bytes)'
+                except:
+                    makernote_info['Type'] = f'Binary MakerNote ({len(makernote_data)} bytes)'
+        
+        except Exception as e:
+            makernote_info['Error'] = str(e)
+        
+        return makernote_info
+
+    @staticmethod
     def get_exif_data(file_path: Path) -> Dict:
         """Extract EXIF data from image."""
         exif_data = {}
@@ -71,6 +126,14 @@ class MetadataParser:
                         tag_name = piexif.TAGS[ifd_name][tag]["name"]
                     except:
                         tag_name = str(tag)
+                    
+                    # Handle MakerNote specially
+                    if tag_name == 'MakerNote':
+                        makernote_parsed = MetadataParser.parse_makernote(value)
+                        if makernote_parsed:
+                            for key, val in makernote_parsed.items():
+                                exif_data[f'MakerNote - {key}'] = val
+                        continue
                     
                     try:
                         if isinstance(value, bytes):

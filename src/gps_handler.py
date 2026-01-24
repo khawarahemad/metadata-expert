@@ -11,8 +11,63 @@ from pathlib import Path
 class GPSHandler:
     """Handle GPS coordinates and location data."""
     
-    # Approximate coordinates for reverse geocoding (simplified)
+    # Comprehensive location database with Indian cities and states
     LOCATION_DB = {
+        # India - Capital & Major Metropolitan Cities
+        (28.7041, 77.1025): "New Delhi, Delhi, India",
+        (19.0760, 72.8777): "Mumbai, Maharashtra, India",
+        (13.0827, 80.2707): "Chennai, Tamil Nadu, India",
+        (22.5726, 88.3639): "Kolkata, West Bengal, India",
+        (30.7333, 76.7597): "Chandigarh, India",
+        (23.1815, 79.9864): "Indore, Madhya Pradesh, India",
+        (21.1458, 79.0882): "Nagpur, Maharashtra, India",
+        (18.5204, 73.8567): "Pune, Maharashtra, India",
+        (25.2048, 75.8362): "Bhopal, Madhya Pradesh, India",
+        (12.9716, 77.5946): "Bangalore, Karnataka, India",
+        (17.3850, 78.4867): "Hyderabad, Telangana, India",
+        
+        # India - Northern Cities & States
+        (30.1337, 77.5803): "Ghaziabad, Uttar Pradesh, India",
+        (30.3011, 77.7099): "Noida, Uttar Pradesh, India",
+        (29.0588, 77.7064): "Agra, Uttar Pradesh, India",
+        (28.4089, 77.3178): "Faridabad, Haryana, India",
+        (26.9124, 75.7873): "Jaipur, Rajasthan, India",
+        (26.1667, 91.5000): "Assam, India",
+        (25.5920, 85.1206): "Patna, Bihar, India",
+        (24.8008, 84.9753): "Varanasi, Uttar Pradesh, India",
+        (26.9229, 80.9450): "Lucknow, Uttar Pradesh, India",
+        (34.1526, 77.5770): "Leh, Ladakh, India",
+        (32.2290, 75.3762): "Shimla, Himachal Pradesh, India",
+        
+        # India - Southern Cities & States
+        (15.2993, 74.8361): "Panaji, Goa, India",
+        (13.9124, 75.6239): "Mangalore, Karnataka, India",
+        (10.9176, 79.8369): "Thiruvananthapuram, Kerala, India",
+        (9.9312, 76.2673): "Kochi, Kerala, India",
+        (8.7305, 77.7597): "Nagercoil, Tamil Nadu, India",
+        (13.3673, 79.8965): "Tirupati, Andhra Pradesh, India",
+        
+        # India - Eastern Cities & States
+        (20.2961, 85.8245): "Bhubaneswar, Odisha, India",
+        (21.1458, 86.8319): "Rourkela, Odisha, India",
+        (23.6345, 85.2988): "Ranchi, Jharkhand, India",
+        (24.8407, 93.9133): "Imphal, Manipur, India",
+        (25.5941, 94.6337): "Aizawl, Mizoram, India",
+        (26.1445, 94.2082): "Kohima, Nagaland, India",
+        (26.5644, 88.3630): "Gangtok, Sikkim, India",
+        (28.2096, 94.3560): "Itanagar, Arunachal Pradesh, India",
+        
+        # India - Western Cities & States
+        (23.1815, 72.6311): "Ahmedabad, Gujarat, India",
+        (21.5922, 71.1925): "Vadodara, Gujarat, India",
+        (22.3088, 73.1924): "Daman, Gujarat, India",
+        (20.2740, 73.7591): "Aurangabad, Maharashtra, India",
+        
+        # India - Central Region
+        (22.7039, 75.8573): "Bina, Madhya Pradesh, India",
+        (23.4729, 87.0479): "Gaya, Bihar, India",
+        
+        # International Cities
         (40.7128, -74.0060): "New York, USA",
         (51.5074, -0.1278): "London, UK",
         (48.8566, 2.3522): "Paris, France",
@@ -20,6 +75,12 @@ class GPSHandler:
         (37.7749, -122.4194): "San Francisco, USA",
         (34.0522, -118.2437): "Los Angeles, USA",
         (41.8781, -87.6298): "Chicago, USA",
+        (39.7392, -104.9903): "Denver, USA",
+        (47.6062, -122.3321): "Seattle, USA",
+        (55.7558, 37.6173): "Moscow, Russia",
+        (-33.8688, 151.2093): "Sydney, Australia",
+        (1.3521, 103.8198): "Singapore",
+        (22.3193, 114.1694): "Hong Kong",
     }
     
     @staticmethod
@@ -83,6 +144,7 @@ class GPSHandler:
     def reverse_geocode(latitude: float, longitude: float) -> str:
         """
         Simple reverse geocoding (coordinates to location name).
+        Matches coordinates with closest location in database.
         In production, use proper API like Google Maps or Open Street Map.
         """
         closest_location = "Unknown Location"
@@ -96,8 +158,8 @@ class GPSHandler:
                 closest_distance = distance
                 closest_location = location_name
         
-        # Only return if reasonably close (within ~5 degrees)
-        if closest_distance < 5:
+        # Only return if reasonably close (within ~8 degrees for better coverage)
+        if closest_distance < 8:
             return closest_location
         
         return f"Coordinates: {latitude:.4f}°, {longitude:.4f}°"
