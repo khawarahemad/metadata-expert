@@ -176,23 +176,79 @@ The edit dialog displays metadata organized by category:
 
 ```
 metadata-expert/
-├── main.py                      # Entry point
-├── requirements.txt             # Python dependencies
-├── README.md                    # This file
-├── .github/
-│   └── copilot-instructions.md # Development notes
-├── .vscode/
-│   ├── settings.json           # VS Code settings
-│   └── tasks.json              # Build tasks
+├── main.py                          # Application entry point
+├── requirements.txt                 # Python dependencies (PyQt6, Pillow, piexif, folium, geopy)
+├── README.md                        # Documentation
+├── LICENSE                          # MIT License
+├── .gitignore                       # Git ignore rules
 └── src/
-    ├── metadata_viewer.py       # Main GUI application & dialogs
-    ├── metadata_parser.py       # Metadata extraction logic
-    ├── metadata_editor.py       # Metadata editing & export
-    ├── tagging_system.py        # Custom tagging & organization
-    ├── gps_handler.py           # GPS & location management
-    ├── privacy_handler.py       # Privacy & security features
-    └── image_operations.py      # Image processing operations
+    ├── metadata_viewer.py           # Main GUI application with dialogs
+    │                                 # - MetadataViewer: Main window with tabbed interface
+    │                                 # - EditMetadataDialog: 40+ editable metadata fields
+    │                                 # Features: Dark mode, keyboard shortcuts, advanced menu
+    │
+    ├── metadata_parser.py           # Metadata extraction & parsing
+    │                                 # - EXIF data extraction from all image formats
+    │                                 # - MakerNote human-readable parsing (detect camera makers)
+    │                                 # - Image properties and file information
+    │
+    ├── metadata_editor.py           # Metadata editing & export operations
+    │                                 # - Edit EXIF data directly
+    │                                 # - Export metadata to text files
+    │                                 # - Create backups and restore
+    │                                 # - Remove EXIF data (privacy mode)
+    │
+    ├── tagging_system.py            # Custom tagging & image organization
+    │                                 # - 318 lines | Hierarchical tag system
+    │                                 # - JSON persistence (~/.metadata_expert/tags.json)
+    │                                 # - Autocomplete suggestions, tag cloud, statistics
+    │
+    ├── gps_handler.py               # GPS coordinates & location management
+    │                                 # - 290 lines | Coordinate extraction/editing
+    │                                 # - Reverse geocoding (60+ locations including 50+ Indian cities)
+    │                                 # - Altitude handling, location grouping, map URLs
+    │
+    ├── privacy_handler.py           # Privacy & security features
+    │                                 # - 280 lines | Selective metadata removal
+    │                                 # - Category-based privacy (GPS, DateTime, Camera, Personal)
+    │                                 # - Risk assessment, encryption, secure deletion
+    │
+    └── image_operations.py          # Advanced image processing
+                                      # - 330 lines | Resize, compress, convert formats
+                                      # - Batch processing with statistics
+                                      # - Thumbnail generation, quality control
 ```
+
+### Directory Breakdown
+
+| File/Folder | Purpose | Lines | Status |
+|---|---|---|---|
+| `main.py` | Entry point - initializes and launches the application | ~10 | ✅ Active |
+| `src/metadata_viewer.py` | Main GUI window with 3 tabs, edit dialog, dark mode | ~500+ | ✅ Active |
+| `src/metadata_parser.py` | EXIF extraction + MakerNote parsing for camera detection | ~250+ | ✅ Active |
+| `src/metadata_editor.py` | EXIF editing, export, backup/restore functionality | ~200+ | ✅ Active |
+| `src/tagging_system.py` | Custom tagging with hierarchical organization | 318 | ✅ Active |
+| `src/gps_handler.py` | GPS handling + reverse geocoding (60+ locations) | 290 | ✅ Active |
+| `src/privacy_handler.py` | Privacy mode, metadata removal, secure deletion | 280 | ✅ Active |
+| `src/image_operations.py` | Image resize, compress, convert, batch processing | 330 | ✅ Active |
+
+### Core Dependencies
+
+```
+PyQt6 (6.6.1)           - GUI Framework
+Pillow (10.1.0)         - Image processing
+piexif (1.1.3)          - EXIF data handling
+folium (0.14.0)         - Interactive maps (future: map visualization)
+geopy (2.3.0)           - Reverse geocoding API support
+```
+
+### Configuration & Metadata Storage
+
+- **Tags Database**: `~/.metadata_expert/tags.json` - Persistent tag storage
+- **Backups**: Created automatically before metadata edits
+- **Cache**: Python bytecode in `.gitignore` (not tracked)
+- **IDE Files**: `.vscode/` and `.idea/` in `.gitignore` (not tracked)
+
 ## 📋 Requirements
 
 - Python 3.8+
