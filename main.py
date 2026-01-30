@@ -12,7 +12,12 @@ src_path = os.path.join(os.path.dirname(__file__), 'src')
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
-from metadata_viewer import main
-
-if __name__ == '__main__':
+try:
+    from metadata_viewer import main
     main()
+except Exception as e:
+    print(f"Error: {e}")
+    import traceback
+    traceback.print_exc()
+    sys.exit(1)
+

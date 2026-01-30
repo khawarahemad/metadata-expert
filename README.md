@@ -17,14 +17,19 @@
 ### 📊 **Complete Metadata Management**
 - **View**: EXIF data, file properties, image dimensions, color profiles
 - **Edit**: 40+ editable metadata fields with original value display
+- **Edit File Timestamp**: Change file's "Last Modified" date to make edits untraceable
 - **Export**: Save metadata to text files or create copies
 - **Clean**: Remove all metadata for privacy protection
+- **Comprehensive Fields**: Date/Time, Camera, Exposure, GPS, Creator, Keywords, and 30+ more
 
 ### ✏️ **Advanced Editing Capabilities**
 - Edit camera information (make, model, lens)
-- Modify date/time stamps and EXIF data
+- Modify date/time stamps (DateTime, DateTimeOriginal, DateTimeDigitized)
+- **Change file timestamp** (make modifications appear from any date)
 - Update creator info (artist, copyright, description)
-- Adjust exposure settings, GPS coordinates, and more
+- Edit exposure settings (ISO, aperture, shutter speed)
+- Adjust GPS coordinates and location data
+- Add/modify keywords, tags, and descriptions
 - Auto-backup before any modifications
 - Undo support with automatic backups
 
@@ -147,30 +152,99 @@ Or directly:
 - **EXIF Data Tab**: Camera settings, timestamps, GPS coordinates
 - **Properties Tab**: Color space, transparency, animation info
 
-### Editing Metadata
+### Editing Metadata & File Timestamps
 
-The edit dialog displays metadata organized by category:
-- 📅 Date & Time
-- 👤 Creator Info
-- 📷 Camera Info
-- 🎯 Exposure Settings
-- 🔍 Focus & Flash
-- 🎨 Image Properties
-- 🌍 Location (GPS)
-- 📝 Additional Info
+The edit dialog displays metadata organized by category with **TWO MAJOR FEATURES**:
+
+#### 🔒 **File Timestamp Editing (NEW!)**
+At the top of the dialog you can change the file's "Last Modified" date:
+- **Current Timestamp**: Shows when file was last modified
+- **New Timestamp**: Enter any date/time in format `YYYY-MM-DD HH:MM:SS`
+- **Purpose**: Make metadata edits untraceable - file will show any date you want
+- **Example**: Set to `2024-01-15 09:30:45` to make edits appear undetected
+
+#### 📝 **Comprehensive Metadata Fields**
+Organized by smart categories:
+- 📅 Date & Time (DateTime, DateTimeOriginal, DateTimeDigitized, SubSecTime)
+- 👤 Creator Info (Artist, Copyright, Author, ImageDescription, Software)
+- 📷 Camera Info (Make, Model, LensModel, LensMake, Serial Number)
+- 🎯 Exposure Settings (ExposureTime, FNumber, ISO, ExposureBiasValue, Metering, Flash)
+- 🔍 Focus & Flash (FocalLength, FocusDistance, FocusMode, AutoFocus)
+- 🎨 Image Properties (Orientation, Resolution, Compression, BitsPerSample, ColorSpace)
+- 🌍 Location (GPSLatitude, GPSLongitude, GPSAltitude, GPSMapDatum, GPSTimeStamp)
+- 📝 Additional Info (Subject, Keywords, Comments, UniqueImageID)
+- 🎬 Media Info (Duration, Frames, Animation, Codec, Profile)
 
 **Features**:
 - See original values in gray text
 - Edit directly in input fields
-- Auto-backup before saving
+- Auto-backup before saving (one-click restore)
+- Change file timestamp to make edits undetectable
 - Clear empty fields option
 - Real-time validation
+- 40+ editable fields total
 
 ### Export Options
 
 1. **Copy Image** - Save image to new location
 2. **Export Metadata** - Save all metadata to `.txt` file
 3. **Remove Metadata** - Export image without EXIF data
+
+## 🔒 File Timestamp Modification (NEW!)
+
+### What is File Timestamp?
+The file's "Last Modified" date shown in your operating system (Windows File Explorer, macOS Finder, Linux file manager).
+
+### Why Change It?
+Make metadata edits **completely untraceable**:
+- ✅ Hide when the file was actually modified
+- ✅ Make edits appear to be from the original photo date
+- ✅ Prevent detection of metadata changes
+- ✅ Align file timestamp with metadata dates
+
+### How to Use
+1. Open an image and click "✏️ Edit"
+2. Look for "⏰ File Last Modified Date & Time" section at top
+3. Current timestamp shown in gray (e.g., `2024-01-30 10:30:45`)
+4. Enter new timestamp in format: **`YYYY-MM-DD HH:MM:SS`**
+5. Examples:
+   - `2024-01-15 09:30:45` - Jan 15, 2024 at 9:30 AM
+   - `2023-06-01 14:00:00` - June 1, 2023 at 2:00 PM
+   - `2020-12-25 00:00:00` - Dec 25, 2020 at midnight
+6. Click "💾 Save All Changes" to apply
+7. File now shows modified timestamp in OS properties
+
+### Example Use Cases
+
+**Privacy Protection:**
+```
+Original file: Modified on Jan 30, 2024
+After edit with timestamp change: Shows as Jan 15, 2024
+Result: Edits are undetectable ✅
+```
+
+**Metadata Consistency:**
+```
+Photo DateTime: 2023-06-15 10:30:00
+File timestamp: 2024-01-20 (file edited later)
+After fix: Both show 2023-06-15 10:30:00
+Result: Consistent metadata ✅
+```
+
+### Technical Details
+
+- **Format Required**: `YYYY-MM-DD HH:MM:SS` (exactly 19 characters)
+- **Validation**: Only valid dates/times accepted
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Permanent**: Change saved immediately to file system
+- **No Backup of Timestamp**: Only metadata backed up, not timestamp
+
+### Verification
+
+After changing timestamp, verify:
+1. **macOS**: Finder → Right-click file → Get Info → "Modified"
+2. **Windows**: File Explorer → Right-click file → Properties → "Modified"
+3. **Linux**: `ls -l filename` in terminal
 
 ## 📁 Project Structure
 
